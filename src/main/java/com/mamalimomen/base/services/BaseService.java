@@ -16,13 +16,15 @@ public interface BaseService<E extends BaseEntity<PK>, PK extends Number> {
 
     void delete(E e);
 
-    Optional<E> findOneByNamedQuery(String namedQuery, String parameter, Class<E> c);
+    <T> Optional<E> findOneByNamedQuery(String namedQuery, T parameter, Class<E> c);
 
-    List<E> findManyByNamedQuery(String namedQuery, String parameter, Class<E> c);
+    <R,T> Optional<R> findOneByNamedQuery(Function<E, R> f, String namedQuery, T parameter, Class<E> c);
+
+    <T> List<E> findManyByNamedQuery(String namedQuery, T parameter, Class<E> c);
 
     List<E> findAllByNamedQuery(String namedQuery, Class<E> c);
 
     List<E> findAllByNamedQuery(Predicate<E> p, String namedQuery, Class<E> c);
 
-    <R extends BaseEntity<PK>> List<R> findAllByNamedQuery(Function<E, R> f, String namedQuery, Class<E> c);
+    <R> List<R> findAllByNamedQuery(Function<E, R> f, String namedQuery, Class<E> c);
 }

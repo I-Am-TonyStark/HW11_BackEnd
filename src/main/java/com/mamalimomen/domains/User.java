@@ -21,6 +21,12 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
     @Transient
     private static long count = 4;
 
+    @Column(nullable = false, updatable = false)
+    private String firstName;
+
+    @Column(nullable = false, updatable = false)
+    private String lastName;
+
     @Column(nullable = false, unique = true, updatable = false)
     private String userName;
 
@@ -44,6 +50,28 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
     public User() {
         this.setId(count);
         count++;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) throws InValidDataException {
+        if (!firstName.matches("\\w{3,}")) {
+            throw new InValidDataException("FirstName");
+        }
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) throws InValidDataException {
+        if (!lastName.matches("\\w{3,}")) {
+            throw new InValidDataException("LastName");
+        }
+        this.lastName = lastName;
     }
 
     public String getUserName() {

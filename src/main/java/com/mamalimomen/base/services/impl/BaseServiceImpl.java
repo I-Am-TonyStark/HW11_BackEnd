@@ -37,12 +37,17 @@ public class BaseServiceImpl<E extends BaseEntity<PK>, PK extends Number, Reposi
     }
 
     @Override
-    public Optional<E> findOneByNamedQuery(String namedQuery, String parameter, Class<E> c) {
+    public <T> Optional<E> findOneByNamedQuery(String namedQuery, T parameter, Class<E> c) {
         return baseRepository.findOneByNamedQuery(namedQuery, parameter, c);
     }
 
     @Override
-    public List<E> findManyByNamedQuery(String namedQuery, String parameter, Class<E> c) {
+    public <R, T> Optional<R> findOneByNamedQuery(Function<E, R> f, String namedQuery, T parameter, Class<E> c) {
+        return baseRepository.findOneByNamedQuery(f, namedQuery, parameter, c);
+    }
+
+    @Override
+    public <T> List<E> findManyByNamedQuery(String namedQuery, T parameter, Class<E> c) {
         return baseRepository.findManyByNamedQuery(namedQuery, parameter, c);
     }
 
@@ -57,7 +62,7 @@ public class BaseServiceImpl<E extends BaseEntity<PK>, PK extends Number, Reposi
     }
 
     @Override
-    public <R extends BaseEntity<PK>> List<R> findAllByNamedQuery(Function<E, R> f, String namedQuery, Class<E> c) {
+    public <R> List<R> findAllByNamedQuery(Function<E, R> f, String namedQuery, Class<E> c) {
         return baseRepository.findAllByNamedQuery(f, namedQuery, c);
     }
 }

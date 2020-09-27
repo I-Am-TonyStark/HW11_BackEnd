@@ -76,7 +76,7 @@ public class BaseRepositoryImpl<E extends BaseEntity<PK>, PK extends Number> imp
     }
 
     @Override
-    public Optional<E> findOneByNamedQuery(String namedQuery, String parameter, Class<E> c) {
+    public <T> Optional<E> findOneByNamedQuery(String namedQuery, T parameter, Class<E> c) {
         E e;
         try {
             e = em.createNamedQuery(namedQuery, c)
@@ -89,7 +89,20 @@ public class BaseRepositoryImpl<E extends BaseEntity<PK>, PK extends Number> imp
     }
 
     @Override
-    public List<E> findManyByNamedQuery(String namedQuery, String parameter, Class<E> c) {
+    public <R, T> Optional<R> findOneByNamedQuery(Function<E, R> f, String namedQuery, T parameter, Class<E> c) {
+        E e;
+        try {
+            e = em.createNamedQuery(namedQuery, c)
+                    .setParameter(1, parameter)
+                    .getSingleResult();
+        } catch (NoResultException exception) {
+            e = null;
+        }
+        return e != null ? Optional.of(f.apply(e)) : Optional.empty();
+    }
+
+    @Override
+    public <T> List<E> findManyByNamedQuery(String namedQuery, T parameter, Class<E> c) {
         return em.createNamedQuery(namedQuery, c)
                 .setParameter(1, parameter)
                 .getResultList();
@@ -110,7 +123,7 @@ public class BaseRepositoryImpl<E extends BaseEntity<PK>, PK extends Number> imp
     }
 
     @Override
-    public <R extends BaseEntity<PK>> List<R> findAllByNamedQuery(Function<E, R> f, String namedQuery, Class<E> c) {
+    public <R> List<R> findAllByNamedQuery(Function<E, R> f, String namedQuery, Class<E> c) {
         return findAllByNamedQuery(namedQuery, c)
                 .stream()
                 .map(f)
