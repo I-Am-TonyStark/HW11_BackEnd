@@ -1,4 +1,4 @@
-/HW10.iml
+/HW11_BackEnd.iml
 /.idea/vcs.xml
 /.idea/uiDesigner.xml
 /target/classes/com/mamalimomen/services/impl/TagServiceImpl.class
@@ -48,7 +48,7 @@
 /target/classes/log4j.properties
 /.idea/jarRepositories.xml
 /.idea/HW11_BackEnd.iml
-/target/classes/META-INF/HW10.kotlin_module
+/target/classes/META-INF/HW11_BackEnd.kotlin_module
 /.idea/dataSources.xml
 /.idea/compiler.xml
 /.idea/.gitignore
