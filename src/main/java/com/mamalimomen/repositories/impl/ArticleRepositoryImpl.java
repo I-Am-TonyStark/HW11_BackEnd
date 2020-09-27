@@ -7,7 +7,6 @@ import com.mamalimomen.repositories.ArticleRepository;
 import javax.persistence.EntityManager;
 
 public class ArticleRepositoryImpl extends BaseRepositoryImpl<Article, Long> implements ArticleRepository {
-
     public ArticleRepositoryImpl(EntityManager em) {
         super(em);
     }

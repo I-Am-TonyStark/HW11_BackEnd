@@ -6,7 +6,6 @@ import com.mamalimomen.repositories.RoleRepository;
 import com.mamalimomen.services.RoleService;
 
 public class RoleServiceImpl extends BaseServiceImpl<Role, Long, RoleRepository> implements RoleService {
-
     public RoleServiceImpl(RoleRepository baseRepository) {
         super(baseRepository);
     }

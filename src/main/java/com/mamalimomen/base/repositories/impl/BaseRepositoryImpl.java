@@ -9,6 +9,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class BaseRepositoryImpl<E extends BaseEntity<PK>, PK extends Number> implements BaseRepository<E, PK> {
     protected final EntityManager em;
@@ -96,5 +99,21 @@ public class BaseRepositoryImpl<E extends BaseEntity<PK>, PK extends Number> imp
     public List<E> findAllByNamedQuery(String namedQuery, Class<E> c) {
         return em.createNamedQuery(namedQuery, c)
                 .getResultList();
+    }
+
+    @Override
+    public List<E> findAllByNamedQuery(Predicate<E> p, String namedQuery, Class<E> c) {
+        return findAllByNamedQuery(namedQuery, c)
+                .stream()
+                .filter(p)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public <R extends BaseEntity<PK>> List<R> findAllByNamedQuery(Function<E, R> f, String namedQuery, Class<E> c) {
+        return findAllByNamedQuery(namedQuery, c)
+                .stream()
+                .map(f)
+                .collect(Collectors.toList());
     }
 }
