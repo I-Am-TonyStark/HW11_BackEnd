@@ -4,9 +4,7 @@ import com.mamalimomen.base.domains.BaseEntity;
 import com.mamalimomen.base.controller.utilities.NoValidDataException;
 
 import javax.persistence.*;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
+import java.util.Date;
 
 @Entity
 @Table(name = "user")
@@ -23,23 +21,23 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
     @Transient
     private static long count = 4;
 
-    @Embedded
-    private Address address;
+    /*@Embedded
+    private Address address;*/
 
     @Column(nullable = false, unique = true, updatable = false)
     private String userName;
+
     @Column(nullable = false, unique = true, updatable = false)
     private String nationalCode;
-    @Column(nullable = false, updatable = false)
-    private String birthDay;
+
+    @Temporal(TemporalType.DATE)
+    @Column(updatable = false)
+    private Date birthDay;
+
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "user_article", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "article_id")})
-    private Set<Article> articles = new TreeSet<>();
-
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "role_id")
     private Role role;
 
@@ -70,15 +68,20 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
         this.nationalCode = nationalCode;
     }
 
-    public String getBirthDay() {
+    public Date getBirthDay() {
         return birthDay;
     }
 
-    public void setBirthDay(String birthDay) throws NoValidDataException {
-        if (!birthDay.matches("[12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])")) {
+    public void setBirthDay(Date birthDay) {
+        this.birthDay = birthDay;
+    }
+
+    public void setStringBirthDay(String birthDay) throws NoValidDataException {
+        if (!birthDay.matches("[01][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])")) {
             throw new NoValidDataException("Birthday");
         }
-        this.birthDay = birthDay;
+        String[] tempArray = birthDay.split("-");
+        setBirthDay(new Date(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]), Integer.parseInt(tempArray[2])));
     }
 
     public String getPassword() {
@@ -92,14 +95,6 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
         this.password = password;
     }
 
-    public Set<Article> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(Set<Article> articles) {
-        this.articles = articles;
-    }
-
     public Role getRole() {
         return role;
     }
@@ -109,14 +104,8 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
     }
 
     public void printCompleteInformation() {
-        System.out.printf("%n%s.%nNationalCode: %s%nBirthday: %s%nRole: %s%nArticles: %s%n",
-                getUserName(), getNationalCode(), getBirthDay(), getRole()
-                , getArticles().stream().map(Article::getTitle).collect(Collectors.joining(" & ")));
-    }
-
-   /* @Override
-    public int hashCode() {
-        return this.getId().intValue();
+        System.out.printf("%n%s.%nNationalCode: %s%nBirthday: %s%nRole: %s%n",
+                getUserName(), getNationalCode(), getBirthDay(), getRole());
     }
 
     @Override
@@ -124,8 +113,8 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         User user = (User) obj;
-        return this.getId() == user.getId();
-    }*/
+        return this.hashCode() == user.hashCode();
+    }
 
     @Override
     public String toString() {

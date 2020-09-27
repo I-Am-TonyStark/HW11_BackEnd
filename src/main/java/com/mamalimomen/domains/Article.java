@@ -24,32 +24,37 @@ public class Article extends BaseEntity<Long> implements Comparable<Article> {
     @Transient
     private static long count = 4;
 
-    @Lob
-    private Photo photo;
-
     @Column(nullable = false, unique = true)
     private String title;
+
     @Column(nullable = false, columnDefinition = "text")
     private String brief;
+
     @Column(nullable = false, columnDefinition = "text")
     private String content;
+
     @Temporal(TemporalType.DATE)
     @Column(updatable = false, nullable = false)
     private Date createDate;
+
     @Temporal(TemporalType.DATE)
     private Date lastUpdateDate;
+
     @Temporal(TemporalType.DATE)
     private Date publishedDate;
+
     @Column(nullable = false)
     private Boolean isPublished;
 
-    @ManyToMany(mappedBy = "articles", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "article_user", joinColumns = {@JoinColumn(name = "article_id")}, inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private Set<User> writers = new TreeSet<>();
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "article_category", joinColumns = {@JoinColumn(name = "article_id")}, inverseJoinColumns = {@JoinColumn(name = "category_id")})
     private Set<Category> categories = new TreeSet<>();
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "article_tag", joinColumns = {@JoinColumn(name = "article_id")}, inverseJoinColumns = {@JoinColumn(name = "tag_id")})
     private Set<Tag> tags = new TreeSet<>();
 
@@ -149,14 +154,21 @@ public class Article extends BaseEntity<Long> implements Comparable<Article> {
 
     public void addWriter(User writer) {
         writers.add(writer);
-        writer.getArticles().add(this);
+    }
+
+    public void addCategory(Category category) {
+        categories.add(category);
+    }
+
+    public void addTag(Tag tag) {
+        tags.add(tag);
     }
 
     public String getCategoriesTitle() {
         return categories.stream().map(Category::getTitle).collect(Collectors.joining(" & "));
     }
 
-    public String getTagTitle() {
+    public String getTagsTitle() {
         return tags.stream().map(Tag::getTitle).collect(Collectors.joining(" & "));
     }
 
@@ -166,12 +178,7 @@ public class Article extends BaseEntity<Long> implements Comparable<Article> {
 
     public void printCompleteInformation() {
         System.out.printf("%n%s.%nCategories : %s%nTags : %s%nCreate Date : %s%nLastUpdate Date : %s%nPublished Date : %s%nWriters : %s%nContent : %s%n%n",
-                getTitle(), getCategoriesTitle(), getTagTitle(), getCreateDate(), getLastUpdateDate(), getPublishedDate(), getWritersName(), getContent());
-    }
-
-    /*@Override
-    public int hashCode() {
-        return this.getId().intValue();
+                getTitle(), getCategoriesTitle(), getTagsTitle(), getCreateDate(), getLastUpdateDate(), getPublishedDate(), getWritersName(), getContent());
     }
 
     @Override
@@ -179,8 +186,8 @@ public class Article extends BaseEntity<Long> implements Comparable<Article> {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Article article = (Article) obj;
-        return this.getId() == article.getId();
-    }*/
+        return this.hashCode() == article.hashCode();
+    }
 
     @Override
     public String toString() {

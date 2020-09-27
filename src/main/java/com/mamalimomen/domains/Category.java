@@ -4,8 +4,6 @@ import com.mamalimomen.base.domains.BaseEntity;
 import com.mamalimomen.base.controller.utilities.NoValidDataException;
 
 import javax.persistence.*;
-import java.util.Set;
-import java.util.TreeSet;
 
 @Entity
 @Table(name = "category")
@@ -23,10 +21,9 @@ public class Category extends BaseEntity<Long> implements Comparable<Category> {
 
     @Column(nullable = false, unique = true)
     private String title;
+
     @Column(nullable = false)
     private String description;
-    @ManyToMany(mappedBy = "categories", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private Set<Article> articles = new TreeSet<>();
 
     public Category() {
         this.setId(count);
@@ -44,14 +41,6 @@ public class Category extends BaseEntity<Long> implements Comparable<Category> {
         this.title = title;
     }
 
-    public Set<Article> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(Set<Article> articles) {
-        this.articles = articles;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -63,19 +52,9 @@ public class Category extends BaseEntity<Long> implements Comparable<Category> {
         this.description = description;
     }
 
-    public void addArticle(Article article) {
-        articles.add(article);
-        article.getCategories().add(this);
-    }
-
     @Override
     public String toString() {
         return String.format("%s%nDescription: %s", getTitle(), getDescription());
-    }
-
-    /*@Override
-    public int hashCode() {
-        return this.getId().intValue();
     }
 
     @Override
@@ -83,8 +62,8 @@ public class Category extends BaseEntity<Long> implements Comparable<Category> {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Category category = (Category) obj;
-        return this.getId() == category.getId();
-    }*/
+        return this.hashCode() == category.hashCode();
+    }
 
     @Override
     public int compareTo(Category c) {

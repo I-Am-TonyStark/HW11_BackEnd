@@ -4,8 +4,6 @@ import com.mamalimomen.base.domains.BaseEntity;
 import com.mamalimomen.base.controller.utilities.NoValidDataException;
 
 import javax.persistence.*;
-import java.util.Set;
-import java.util.TreeSet;
 
 @Entity
 @Table(name = "role")
@@ -24,17 +22,9 @@ public class Role extends BaseEntity<Long> implements Comparable<Role> {
     @Column(nullable = false, unique = true)
     private String title;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<User> users = new TreeSet<>();
-
     public Role() {
         this.setId(count);
         count++;
-    }
-
-    public Role(String title) {
-        this();
-        this.title = title;
     }
 
     public String getTitle() {
@@ -48,27 +38,9 @@ public class Role extends BaseEntity<Long> implements Comparable<Role> {
         this.title = title;
     }
 
-    public void addUser(User user) {
-        users.add(user);
-        user.setRole(this);
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
     @Override
     public String toString() {
         return String.format("%s", getTitle());
-    }
-
-   /* @Override
-    public int hashCode() {
-        return this.getId().intValue();
     }
 
     @Override
@@ -76,8 +48,8 @@ public class Role extends BaseEntity<Long> implements Comparable<Role> {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Role role = (Role) obj;
-        return this.getId() == role.getId();
-    }*/
+        return this.hashCode() == role.hashCode();
+    }
 
     @Override
     public int compareTo(Role r) {
