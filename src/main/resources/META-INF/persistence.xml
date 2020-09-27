@@ -8,9 +8,7 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <!--<exclude-unlisted-classes>false</exclude-unlisted-classes>-->
         <class>com.mamalimomen.domains.Article</class>
-        <class>com.mamalimomen.domains.User</class>
         <class>com.mamalimomen.domains.Tag</class>
-        <class>com.mamalimomen.domains.Role</class>
         <class>com.mamalimomen.domains.Category</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
@@ -19,7 +17,30 @@
             <property name="hibernate.generate_statistics" value="true"/>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url"
-                      value="jdbc:mysql://127.0.0.1:3306/HW11?createDatabaseIfNotExist=true?autoReconnect=true&amp;characterEncoding=UTF-8&amp;userSSL=false"/>
+                      value="jdbc:mysql://127.0.0.1:3306/HW11_One?createDatabaseIfNotExist=true?autoReconnect=true&amp;characterEncoding=UTF-8&amp;userSSL=false"/>
+            <property name="javax.persistence.jdbc.user" value="mamali"/>
+            <property name="javax.persistence.jdbc.password" value="mamali2120"/>
+            <property name="javax.persistence.schema-generation.database.action" value="create-drop"/>
+            <!--<property name="hibernate.hbm2ddl.auto" value="update"/>-->
+            <property name="javax.persistence.sql-load-script-source" value="data.sql"/>
+            <!--<property name="hibernate.show_sql" value="true"/>-->
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="persistence-unit-two">
+        <description>Hibernate EntityManager Two</description>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <!--<exclude-unlisted-classes>false</exclude-unlisted-classes>-->
+        <class>com.mamalimomen.domains.User</class>
+        <class>com.mamalimomen.domains.Role</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+            <property name="hibernate.generate_statistics" value="true"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url"
+                      value="jdbc:mysql://127.0.0.1:3306/HW11_Two?createDatabaseIfNotExist=true?autoReconnect=true&amp;characterEncoding=UTF-8&amp;userSSL=false"/>
             <property name="javax.persistence.jdbc.user" value="mamali"/>
             <property name="javax.persistence.jdbc.password" value="mamali2120"/>
             <property name="javax.persistence.schema-generation.database.action" value="create-drop"/>
