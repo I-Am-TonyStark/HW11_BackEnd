@@ -21,9 +21,6 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
     @Transient
     private static long count = 4;
 
-    /*@Embedded
-    private Address address;*/
-
     @Column(nullable = false, unique = true, updatable = false)
     private String userName;
 
@@ -40,6 +37,9 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
     @ManyToOne(optional = false)
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @Embedded
+    private Address address;
 
     public User() {
         this.setId(count);
@@ -66,6 +66,14 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
             throw new InValidDataException("National Code");
         }
         this.nationalCode = nationalCode;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public Date getBirthDay() {
