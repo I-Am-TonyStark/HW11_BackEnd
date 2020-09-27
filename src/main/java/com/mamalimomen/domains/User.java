@@ -1,7 +1,7 @@
 package com.mamalimomen.domains;
 
 import com.mamalimomen.base.domains.BaseEntity;
-import com.mamalimomen.base.controller.utilities.NoValidDataException;
+import com.mamalimomen.base.controller.utilities.InValidDataException;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -50,9 +50,9 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
         return userName;
     }
 
-    public void setUserName(String userName) throws NoValidDataException {
+    public void setUserName(String userName) throws InValidDataException {
         if (!userName.matches("(\\w\\d*){3,}")) {
-            throw new NoValidDataException("Username");
+            throw new InValidDataException("Username");
         }
         this.userName = userName;
     }
@@ -61,9 +61,9 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
         return nationalCode;
     }
 
-    public void setNationalCode(String nationalCode) throws NoValidDataException {
+    public void setNationalCode(String nationalCode) throws InValidDataException {
         if (!nationalCode.matches("\\d{10}")) {
-            throw new NoValidDataException("National Code");
+            throw new InValidDataException("National Code");
         }
         this.nationalCode = nationalCode;
     }
@@ -76,9 +76,9 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
         this.birthDay = birthDay;
     }
 
-    public void setStringBirthDay(String birthDay) throws NoValidDataException {
+    public void setStringBirthDay(String birthDay) throws InValidDataException {
         if (!birthDay.matches("[01][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])")) {
-            throw new NoValidDataException("Birthday");
+            throw new InValidDataException("Birthday");
         }
         String[] tempArray = birthDay.split("-");
         setBirthDay(new Date(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]), Integer.parseInt(tempArray[2])));
@@ -88,9 +88,9 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
         return password;
     }
 
-    public void setPassword(String password) throws NoValidDataException {
+    public void setPassword(String password) throws InValidDataException {
         if (!password.matches("[a-zA-Z0-9]{3,}")) {
-            throw new NoValidDataException("Password");
+            throw new InValidDataException("Password");
         }
         this.password = password;
     }

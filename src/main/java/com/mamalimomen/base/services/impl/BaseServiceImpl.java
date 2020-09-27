@@ -43,4 +43,9 @@ public class BaseServiceImpl<E extends BaseEntity<PK>, PK extends Number, Reposi
     public List<E> findManyByNamedQuery(String namedQuery, String parameter, Class<E> c) {
         return baseRepository.findManyByNamedQuery(namedQuery, parameter, c);
     }
+
+    @Override
+    public List<E> findAllByNamedQuery(String namedQuery, Class<E> c) {
+        return baseRepository.findAllByNamedQuery(namedQuery, c);
+    }
 }

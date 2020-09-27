@@ -1,7 +1,7 @@
 package com.mamalimomen.domains;
 
 import com.mamalimomen.base.domains.BaseEntity;
-import com.mamalimomen.base.controller.utilities.NoValidDataException;
+import com.mamalimomen.base.controller.utilities.InValidDataException;
 
 import javax.persistence.*;
 
@@ -31,9 +31,9 @@ public class Tag extends BaseEntity<Long> implements Comparable<Tag> {
         return title;
     }
 
-    public void setTitle(String title) throws NoValidDataException {
+    public void setTitle(String title) throws InValidDataException {
         if (!title.matches("[a-zA-Z\\s.,&\\d\\(\\)]{3,}")) {
-            throw new NoValidDataException("Title");
+            throw new InValidDataException("Title");
         }
         this.title = title;
     }

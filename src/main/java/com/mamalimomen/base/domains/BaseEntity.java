@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @MappedSuperclass
-public class BaseEntity<PK extends Number> implements Serializable {
+public abstract class BaseEntity<PK extends Number> implements Serializable {
     @Id
     @Column(name = "ID", updatable = false, nullable = false, unique = true)
     private PK id;

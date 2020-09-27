@@ -91,4 +91,10 @@ public class BaseRepositoryImpl<E extends BaseEntity<PK>, PK extends Number> imp
                 .setParameter(1, parameter)
                 .getResultList();
     }
+
+    @Override
+    public List<E> findAllByNamedQuery(String namedQuery, Class<E> c) {
+        return em.createNamedQuery(namedQuery, c)
+                .getResultList();
+    }
 }

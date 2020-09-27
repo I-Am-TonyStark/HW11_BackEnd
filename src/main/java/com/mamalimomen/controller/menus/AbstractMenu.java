@@ -33,7 +33,7 @@ public abstract class AbstractMenu implements Menu {
             try {
                 return sc.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Wrong format, Enter a number please!");
+                System.out.println("Wrong format, enter an integer number please!");
                 sc.nextLine();
             }
         }

@@ -18,7 +18,7 @@ public final class SingletonScanner {
         do {
             paragraph += line + "\n";
             line = sc.nextLine();
-        } while (!line.equalsIgnoreCase("\\."));
+        } while (!line.equalsIgnoreCase("\\/"));
         return paragraph.trim();
     }
 }

@@ -1,7 +1,7 @@
 package com.mamalimomen.controller.menus;
 
 import com.mamalimomen.controller.utilities.MenuFactory;
-import com.mamalimomen.base.controller.utilities.NoValidDataException;
+import com.mamalimomen.base.controller.utilities.InValidDataException;
 import com.mamalimomen.base.controller.utilities.SingletonScanner;
 import com.mamalimomen.controller.utilities.SingletonWriterRole;
 import com.mamalimomen.domains.*;
@@ -35,7 +35,7 @@ public class MenuActions {
     }
 
     static void seePublishedArticles(Scanner sc) {
-        List<Article> articles = articleService.findAll(Article.class, "Article.findAllPublished");
+        List<Article> articles = articleService.findAllByNamedQuery("Article.findAllPublished",  Article.class);
         if (articles.size() == 0) {
             System.out.println("There is not any published article yet!");
             return;
@@ -116,7 +116,7 @@ public class MenuActions {
                 } else {
                     System.out.println("There is a User with this information already!");
                 }
-            } catch (NoValidDataException e) {
+            } catch (InValidDataException e) {
                 System.out.println("Wrong entered data format for " + e.getMessage() + "!");
             }
         }
@@ -147,7 +147,7 @@ public class MenuActions {
                 } else {
                     System.out.println("There is a problem, We can not update your password!");
                 }
-            } catch (NoValidDataException e) {
+            } catch (InValidDataException e) {
                 System.out.println("Wrong entered data format for " + e.getMessage() + "!");
             }
         }
@@ -241,7 +241,7 @@ public class MenuActions {
                     }
                 }
                 return;
-            } catch (NoValidDataException e) {
+            } catch (InValidDataException e) {
                 System.out.println("Wrong entered data format for " + e.getMessage() + "!");
             }
         }
@@ -311,7 +311,7 @@ public class MenuActions {
                         } else {
                             System.out.println("There is a article with this title already!");
                         }
-                    } catch (NoValidDataException e) {
+                    } catch (InValidDataException e) {
                         System.out.println("Wrong entered data format for " + e.getMessage() + "!");
                     }
                 }
@@ -455,7 +455,7 @@ public class MenuActions {
                 } else {
                     System.out.println("There is a category with this title already!");
                 }
-            } catch (NoValidDataException e) {
+            } catch (InValidDataException e) {
                 System.out.println("Wrong entered data format for " + e.getMessage() + "!");
             }
         }
@@ -479,7 +479,7 @@ public class MenuActions {
                 } else {
                     System.out.println("There is a tag with this title already!");
                 }
-            } catch (NoValidDataException e) {
+            } catch (InValidDataException e) {
                 System.out.println("Wrong entered data format for " + e.getMessage() + "!");
             }
         }
