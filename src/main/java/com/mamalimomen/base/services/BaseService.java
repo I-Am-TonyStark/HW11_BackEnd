@@ -2,20 +2,19 @@ package com.mamalimomen.base.services;
 
 import com.mamalimomen.base.domains.BaseEntity;
 
-import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public interface BaseService<E extends BaseEntity<PK>, PK extends Serializable> {
+public interface BaseService<E extends BaseEntity<PK>, PK extends Number> {
     Optional<E> save(E e);
 
     Optional<E> update(E e);
 
-    Optional<E> findById(Class<E> c, PK id);
+    Optional<E> find(E e);
 
-    void delete(Class<E> c, PK id);
+    void delete(E e);
 
-    List<E> findAll(Class<E> c, String query);
+    Optional<E> findOneByNamedQuery(String namedQuery, String parameter, Class<E> c);
 
+    List<E> findManyByNamedQuery(String namedQuery, String parameter, Class<E> c);
 }

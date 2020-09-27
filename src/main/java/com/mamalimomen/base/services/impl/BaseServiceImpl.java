@@ -4,12 +4,10 @@ import com.mamalimomen.base.domains.BaseEntity;
 import com.mamalimomen.base.repositories.BaseRepository;
 import com.mamalimomen.base.services.BaseService;
 
-import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class BaseServiceImpl<E extends BaseEntity<PK>, PK extends Serializable, Repository extends BaseRepository<E, PK>> implements BaseService<E, PK> {
+public class BaseServiceImpl<E extends BaseEntity<PK>, PK extends Number, Repository extends BaseRepository<E, PK>> implements BaseService<E, PK> {
     protected final Repository baseRepository;
 
     public BaseServiceImpl(Repository baseRepository) {
@@ -27,17 +25,22 @@ public class BaseServiceImpl<E extends BaseEntity<PK>, PK extends Serializable, 
     }
 
     @Override
-    public Optional<E> findById(Class<E> c, PK id) {
-        return baseRepository.findById(c, id);
+    public Optional<E> find(E e) {
+        return baseRepository.find(e);
     }
 
     @Override
-    public void delete(Class<E> c, PK id) {
-        baseRepository.delete(c, id);
+    public void delete(E e) {
+        baseRepository.delete(e);
     }
 
     @Override
-    public List<E> findAll(Class<E> c, String query) {
-        return baseRepository.findAll(c, query);
+    public Optional<E> findOneByNamedQuery(String namedQuery, String parameter, Class<E> c) {
+        return baseRepository.findOneByNamedQuery(namedQuery, parameter, c);
+    }
+
+    @Override
+    public List<E> findManyByNamedQuery(String namedQuery, String parameter, Class<E> c) {
+        return baseRepository.findManyByNamedQuery(namedQuery, parameter, c);
     }
 }
