@@ -12,12 +12,18 @@ public final class PersistenceUnitManager {
     private PersistenceUnitManager() {
     }
 
-    public final synchronized EntityManager getEntityManager(PersistenceUnit pu) {
+    public static synchronized EntityManager getEntityManager(PersistenceUnit pu) {
         EntityManagerFactory em = mapper.get(pu);
 
         if (em == null) {
             mapper.put(pu, Persistence.createEntityManagerFactory(pu.getUnit()));
             return mapper.get(pu).createEntityManager();
         } else return em.createEntityManager();
+    }
+
+    public static synchronized void closePersistenceUnits() {
+        for (EntityManagerFactory em : mapper.values()) {
+            em.close();
+        }
     }
 }

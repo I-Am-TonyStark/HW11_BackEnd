@@ -8,6 +8,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public interface BaseRepository<E extends BaseEntity<PK>, PK extends Number> {
+    void closeEntityManger();
+
     Optional<E> save(E e);
 
     Optional<E> update(E e);

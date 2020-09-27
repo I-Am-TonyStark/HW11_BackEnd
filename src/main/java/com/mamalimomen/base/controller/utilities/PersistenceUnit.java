@@ -1,8 +1,8 @@
 package com.mamalimomen.base.controller.utilities;
 
 public enum PersistenceUnit {
-    UNIT_ONE("persistence-unit-two"),
-    UNIT_TWO("persistence-unit-one");
+    UNIT_ONE("persistence-unit-one"),
+    UNIT_TWO("persistence-unit-two");
 
     private final String unit;
     public static final int UNIT_COUNT = 2;

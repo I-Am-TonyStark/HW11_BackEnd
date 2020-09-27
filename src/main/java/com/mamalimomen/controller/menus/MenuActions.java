@@ -1,5 +1,7 @@
 package com.mamalimomen.controller.menus;
 
+import com.mamalimomen.base.controller.utilities.PersistenceUnit;
+import com.mamalimomen.base.controller.utilities.PersistenceUnitManager;
 import com.mamalimomen.controller.utilities.MenuFactory;
 import com.mamalimomen.base.controller.utilities.InValidDataException;
 import com.mamalimomen.base.controller.utilities.SingletonScanner;
@@ -9,33 +11,43 @@ import com.mamalimomen.repositories.impl.*;
 import com.mamalimomen.services.*;
 import com.mamalimomen.services.impl.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.sql.Date;
 import java.util.*;
 
-public class MenuActions {
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("my-persistence-unit");
-    private static final EntityManager em = emf.createEntityManager();
+public final class MenuActions {
 
-    private static final ArticleService articleService = new ArticleServiceImpl(new ArticleRepositoryImpl(em));
-    private static final CategoryService categoryService = new CategoryServiceImpl(new CategoryRepositoryImpl(em));
-    private static final RoleService roleService = new RoleServiceImpl(new RoleRepositoryImpl(em));
-    private static final TagService tagService = new TagServiceImpl(new TagRepositoryImpl(em));
-    private static final UserService userService = new UserServiceImpl(new UserRepositoryImpl(em));
+    private static final MenuActions mas = new MenuActions();
 
-    public static void startApp() {
+    private final ArticleService articleService;
+    private final CategoryService categoryService;
+    private final RoleService roleService;
+    private final TagService tagService;
+    private final UserService userService;
+
+    private MenuActions() {
+        articleService = new ArticleServiceImpl(new ArticleRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_ONE)));
+        categoryService = new CategoryServiceImpl(new CategoryRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_ONE)));
+        tagService = new TagServiceImpl(new TagRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_ONE)));
+        userService = new UserServiceImpl(new UserRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_TWO)));
+        roleService = new RoleServiceImpl(new RoleRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_TWO)));
         MenuFactory.getMenu(null).showMenu();
     }
 
-    public static void endApp() {
-        em.close();
-        emf.close();
+    public static synchronized MenuActions startApp() {
+        return mas;
+    }
+
+    public void endApp() {
+        articleService.closeEntityManger();
+        categoryService.closeEntityManger();
+        tagService.closeEntityManger();
+        userService.closeEntityManger();
+        roleService.closeEntityManger();
+        PersistenceUnitManager.closePersistenceUnits();
     }
 
     static void seePublishedArticles(Scanner sc) {
-        List<Article> articles = articleService.findAllByNamedQuery("Article.findAllPublished",  Article.class);
+        List<Article> articles = articleService.findAllByNamedQuery("Article.findAllPublished", Article.class);
         if (articles.size() == 0) {
             System.out.println("There is not any published article yet!");
             return;

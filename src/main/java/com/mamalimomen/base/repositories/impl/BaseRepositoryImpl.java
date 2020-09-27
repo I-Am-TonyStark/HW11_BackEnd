@@ -2,7 +2,6 @@ package com.mamalimomen.base.repositories.impl;
 
 import com.mamalimomen.base.domains.BaseEntity;
 import com.mamalimomen.base.repositories.BaseRepository;
-import com.mamalimomen.domains.Article;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
@@ -18,6 +17,12 @@ public class BaseRepositoryImpl<E extends BaseEntity<PK>, PK extends Number> imp
 
     public BaseRepositoryImpl(EntityManager em) {
         this.em = em;
+    }
+
+    @Override
+    public void closeEntityManger() {
+        if (em.isOpen())
+            em.close();
     }
 
     @Override

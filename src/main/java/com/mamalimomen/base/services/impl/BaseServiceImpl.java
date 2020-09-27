@@ -17,6 +17,11 @@ public class BaseServiceImpl<E extends BaseEntity<PK>, PK extends Number, Reposi
     }
 
     @Override
+    public void closeEntityManger() {
+        baseRepository.closeEntityManger();
+    }
+
+    @Override
     public Optional<E> save(E e) {
         return baseRepository.save(e);
     }
