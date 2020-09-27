@@ -2,13 +2,15 @@ package com.mamalimomen.base.repositories.impl;
 
 import com.mamalimomen.base.domains.BaseEntity;
 import com.mamalimomen.base.repositories.BaseRepository;
+import com.mamalimomen.domains.Article;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import java.io.Serializable;
+import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 
-public class BaseRepositoryImpl<E extends BaseEntity<PK>, PK extends Serializable> implements BaseRepository<E, PK> {
+public class BaseRepositoryImpl<E extends BaseEntity<PK>, PK extends Number> implements BaseRepository<E, PK> {
     protected final EntityManager em;
 
     public BaseRepositoryImpl(EntityManager em) {
@@ -20,16 +22,12 @@ public class BaseRepositoryImpl<E extends BaseEntity<PK>, PK extends Serializabl
         try {
             em.getTransaction().begin();
 
-            /*em.flush();
-            em.clear();*/
-
-            if (!em.contains(e))
-                em.persist(e);
+            em.persist(e);
 
             em.getTransaction().commit();
+
             return Optional.of(e);
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (EntityExistsException exception) {
             em.getTransaction().rollback();
         }
         return Optional.empty();
@@ -40,52 +38,57 @@ public class BaseRepositoryImpl<E extends BaseEntity<PK>, PK extends Serializabl
         try {
             em.getTransaction().begin();
 
-            /*em.flush();
-            em.clear();*/
-
-            if (em.contains(e))
-                e = em.merge(e);
+            e = em.merge(e);
 
             em.getTransaction().commit();
+
             return Optional.of(e);
-        } catch (Exception exception) {
+        } catch (IllegalArgumentException exception) {
             em.getTransaction().rollback();
-            exception.printStackTrace();
         }
         return Optional.empty();
     }
 
     @Override
-    public Optional<E> findById(Class<E> c, PK id) {
-        E e = em.find(c, id);
+    public Optional<E> find(E e) {
+        E found = (E) em.find(e.getClass(), e.getId());
         return e != null ? Optional.of(e) : Optional.empty();
     }
 
     @Override
-    public void delete(Class<E> c, PK id) {
+    public void delete(E e) {
         try {
 
-            E e = em.find(c, id);
-            if (e != null) {
+            Optional<E> optionalE = find(e);
+            if (optionalE.isPresent()) {
                 em.getTransaction().begin();
 
-                /*em.flush();
-                em.clear();*/
-
-                if (em.contains(e))
-                    em.remove(e);
-                //else em.merge(e);
+                em.remove(e);
 
                 em.getTransaction().commit();
             }
-        } catch (Exception exception) {
+        } catch (IllegalArgumentException exception) {
             em.getTransaction().rollback();
-            exception.printStackTrace();
         }
     }
 
     @Override
-    public List<E> findAll(Class<E> c, String query) {
-        return em.createNamedQuery(query, c).getResultList();
+    public Optional<E> findOneByNamedQuery(String namedQuery, String parameter, Class<E> c) {
+        E e;
+        try {
+            e = em.createNamedQuery(namedQuery, c)
+                    .setParameter(1, parameter)
+                    .getSingleResult();
+        } catch (NoResultException exception) {
+            e = null;
+        }
+        return e != null ? Optional.of(e) : Optional.empty();
+    }
+
+    @Override
+    public List<E> findManyByNamedQuery(String namedQuery, String parameter, Class<E> c) {
+        return em.createNamedQuery(namedQuery, c)
+                .setParameter(1, parameter)
+                .getResultList();
     }
 }

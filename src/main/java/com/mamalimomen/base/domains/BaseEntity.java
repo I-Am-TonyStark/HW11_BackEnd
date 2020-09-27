@@ -4,9 +4,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @MappedSuperclass
-public class BaseEntity<PK extends Serializable> implements Serializable {
+public class BaseEntity<PK extends Number> implements Serializable {
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", updatable = false, nullable = false, unique = true)
     private PK id;
 

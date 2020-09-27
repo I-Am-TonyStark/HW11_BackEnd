@@ -10,8 +10,8 @@ import java.util.Date;
 @Table(name = "user")
 @NamedQueries({
         @NamedQuery(name = "User.findAll", query = "select u from User u"),
-        @NamedQuery(name = "User.findByUserName", query = "select u from User u where u.userName =:userName"),
-        @NamedQuery(name = "User.findAllExceptMe", query = "select u from User u where u.userName <>:userName")
+        @NamedQuery(name = "User.findOneByUserName", query = "select u from User u where u.userName =?1"),
+        @NamedQuery(name = "User.findAllWhereNotMe", query = "select u from User u where u.userName <>?1")
 })
 public class User extends BaseEntity<Long> implements Comparable<User> {
 

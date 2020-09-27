@@ -12,22 +12,4 @@ public class RoleRepositoryImpl extends BaseRepositoryImpl<Role, Long> implement
     public RoleRepositoryImpl(EntityManager em) {
         super(em);
     }
-
-    @Override
-    public Optional<Role> findByTitle(String title) {
-        Role role;
-        try {
-            role = em.createNamedQuery("Role.findByTitle", Role.class)
-                    .setParameter("title", title)
-                    .getSingleResult();
-        } catch (NoResultException e) {
-            role = null;
-        }
-        return role != null ? Optional.of(role) : Optional.empty();
-    }
-
-    @Override
-    public void delete(Long id) {
-        super.delete(Role.class, id);
-    }
 }

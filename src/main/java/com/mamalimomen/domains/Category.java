@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "category")
 @NamedQueries({
         @NamedQuery(name = "Category.findAll", query = "select c from Category c"),
-        @NamedQuery(name = "Category.findByTitle", query = "select c from Category c where c.title =:title")
+        @NamedQuery(name = "Category.findOneByTitle", query = "select c from Category c where c.title =?1")
 })
 public class Category extends BaseEntity<Long> implements Comparable<Category> {
 
