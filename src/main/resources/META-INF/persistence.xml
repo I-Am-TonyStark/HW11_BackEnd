@@ -19,7 +19,7 @@
             <property name="hibernate.generate_statistics" value="true"/>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url"
-                      value="jdbc:mysql://127.0.0.1:3306/HW11_One?createDatabaseIfNotExist=true&amp;autoReconnect=true&amp;characterEncoding=UTF-8&amp;userSSL=false"
+                      value="jdbc:mysql://127.0.0.1:3306/HW11_One?createDatabaseIfNotExist=true&amp;autoReconnect=true&amp;characterEncoding=UTF-8&amp;userSSL=false"/>
             <property name="javax.persistence.jdbc.user" value="mamali"/>
             <property name="javax.persistence.jdbc.password" value="mamali2120"/>
             <property name="javax.persistence.schema-generation.database.action" value="create-drop"/>
