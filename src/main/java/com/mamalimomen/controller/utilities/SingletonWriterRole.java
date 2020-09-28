@@ -1,5 +1,6 @@
 package com.mamalimomen.controller.utilities;
 
+import com.mamalimomen.base.controller.utilities.InValidDataException;
 import com.mamalimomen.domains.Role;
 import com.mamalimomen.services.RoleService;
 
@@ -11,11 +12,16 @@ public final class SingletonWriterRole {
     }
 
     public static synchronized Role getWriterRole(RoleService roleService) {
-        Optional<Role> oRole = roleService.findByTitle("writer");
+        Optional<Role> oRole = roleService.findOneRole("writer");
         if (oRole.isPresent())
             return oRole.get();
         else {
-            Role role = new Role("writer");
+            Role role = new Role();
+            try {
+                role.setTitle("writer");
+            } catch (InValidDataException e) {
+                e.printStackTrace();
+            }
             return role;
         }
     }
