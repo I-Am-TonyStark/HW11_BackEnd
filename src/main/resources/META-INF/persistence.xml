@@ -10,6 +10,8 @@
         <class>com.mamalimomen.domains.Article</class>
         <class>com.mamalimomen.domains.Tag</class>
         <class>com.mamalimomen.domains.Category</class>
+        <class>com.mamalimomen.domains.User</class>
+        <class>com.mamalimomen.domains.Role</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
         <properties>
@@ -31,8 +33,6 @@
         <description>Hibernate EntityManager Two</description>
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <!--<exclude-unlisted-classes>false</exclude-unlisted-classes>-->
-        <class>com.mamalimomen.domains.User</class>
-        <class>com.mamalimomen.domains.Role</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
         <properties>

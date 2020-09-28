@@ -6,7 +6,7 @@ import com.mamalimomen.base.controller.utilities.InValidDataException;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "tag")
+@Table(name = "tag",schema = "HW11_One")
 @NamedQueries({
         @NamedQuery(name = "Tag.findAll", query = "select t from Tag t"),
         @NamedQuery(name = "Tag.findOneByTitle", query = "select t from Tag t where t.title =?1")

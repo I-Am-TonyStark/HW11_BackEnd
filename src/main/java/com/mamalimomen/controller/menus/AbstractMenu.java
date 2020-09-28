@@ -2,7 +2,7 @@ package com.mamalimomen.controller.menus;
 
 import com.mamalimomen.base.controller.menus.Menu;
 import com.mamalimomen.base.controller.utilities.SingletonScanner;
-import com.mamalimomen.domains.User;
+import com.mamalimomen.domains.UserInfo;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Scanner;
 
 public abstract class AbstractMenu implements Menu {
-    protected final User thisMenuUser;
+    protected final UserInfo thisMenuUser;
     protected final Scanner sc;
     private final String title;
     private final List<String> options;
 
-    public AbstractMenu(String title, String[] options, User user) {
+    public AbstractMenu(String title, String[] options, UserInfo user) {
         this.sc = SingletonScanner.getScanner();
         this.options = new ArrayList<>(List.of(options));
         this.title = title;

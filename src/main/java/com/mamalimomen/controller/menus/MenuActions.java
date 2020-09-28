@@ -18,26 +18,25 @@ public final class MenuActions {
 
     private static final MenuActions mas = new MenuActions();
 
-    private final ArticleService articleService;
-    private final CategoryService categoryService;
-    private final RoleService roleService;
-    private final TagService tagService;
-    private final UserService userService;
+    private static ArticleService articleService;
+    private static CategoryService categoryService;
+    private static RoleService roleService;
+    private static TagService tagService;
+    private static UserService userService;
 
     private MenuActions() {
         articleService = new ArticleServiceImpl(new ArticleRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_ONE)));
         categoryService = new CategoryServiceImpl(new CategoryRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_ONE)));
         tagService = new TagServiceImpl(new TagRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_ONE)));
-        userService = new UserServiceImpl(new UserRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_TWO)));
-        roleService = new RoleServiceImpl(new RoleRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_TWO)));
+        userService = new UserServiceImpl(new UserRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_ONE)));
+        roleService = new RoleServiceImpl(new RoleRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_ONE)));
+    }
+
+    public static synchronized void startApp() {
         MenuFactory.getMenu(null).showMenu();
     }
 
-    public static synchronized MenuActions startApp() {
-        return mas;
-    }
-
-    public void endApp() {
+    public static synchronized void endApp() {
         articleService.closeEntityManger();
         categoryService.closeEntityManger();
         tagService.closeEntityManger();
@@ -47,7 +46,7 @@ public final class MenuActions {
     }
 
     static void seePublishedArticles(Scanner sc) {
-        List<Article> articles = articleService.findAllByNamedQuery("Article.findAllPublished", Article.class);
+        List<Article> articles = articleService.findAllByNamedQuery("Article.findAllWherePublished", Article.class);
         if (articles.size() == 0) {
             System.out.println("There is not any published article yet!");
             return;
@@ -73,7 +72,7 @@ public final class MenuActions {
             try {
                 return sc.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Wrong format, Enter a number please!");
+                System.out.println("Wrong format, enter an integer number please!");
                 sc.nextLine();
             }
         }
@@ -87,7 +86,7 @@ public final class MenuActions {
             if (userName.equalsIgnoreCase("esc")) {
                 return;
             }
-            Optional<User> oUser = userService.findUserByUserName(userName);
+            Optional<User> oUser = userService.findOneByNamedQuery("User.findOneByUserName",userName,User.class);
             if (oUser.isPresent()) {
                 User user = oUser.get();
                 System.out.print("Password: ");

@@ -20,9 +20,11 @@ public interface BaseService<E extends BaseEntity<PK>, PK extends Number> {
 
     <T> Optional<E> findOneByNamedQuery(String namedQuery, T parameter, Class<E> c);
 
-    <R,T> Optional<R> findOneByNamedQuery(Function<E, R> f, String namedQuery, T parameter, Class<E> c);
+    <R, T> Optional<R> findOneByNamedQuery(Function<E, R> f, String namedQuery, T parameter, Class<E> c);
 
     <T> List<E> findManyByNamedQuery(String namedQuery, T parameter, Class<E> c);
+
+    <R, T> List<R> findManyByNamedQuery(Function<E, R> f, String namedQuery, T parameter, Class<E> c);
 
     List<E> findAllByNamedQuery(String namedQuery, Class<E> c);
 

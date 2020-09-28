@@ -1,11 +1,11 @@
 package com.mamalimomen.controller.menus;
 
-import com.mamalimomen.domains.User;
+import com.mamalimomen.domains.UserInfo;
 
 public class WriterMenu extends AbstractMenu {
 
-    public WriterMenu(User writer) {
-        super(writer.getUserName() + "'s account", new String[]{
+    public WriterMenu(UserInfo writer) {
+        super(writer.getFullName() + "'s account", new String[]{
                 "Change your password",
                 "See and Modify your articles",
                 "Write new article"

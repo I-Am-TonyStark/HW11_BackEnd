@@ -1,11 +1,11 @@
 package com.mamalimomen.controller.menus;
 
-import com.mamalimomen.domains.User;
+import com.mamalimomen.domains.UserInfo;
 
 public class AdminMenu extends AbstractMenu {
 
-    public AdminMenu(User admin) {
-        super(admin.getUserName() + "'s account", new String[]{
+    public AdminMenu(UserInfo admin) {
+        super(admin.getFullName() + "'s account", new String[]{
                 "Change your password",
                 "See and Modify your articles",
                 "Write new article",
