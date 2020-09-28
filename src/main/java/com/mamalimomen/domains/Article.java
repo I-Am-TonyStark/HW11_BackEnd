@@ -10,7 +10,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "article", schema = "HW11_One")
+@Table(name = "article")
 @NamedQueries({
         @NamedQuery(name = "Article.findAll", query = "select a from Article a"),
         @NamedQuery(name = "Article.findAllWherePublished", query = "select a from Article a where a.isPublished = true"),

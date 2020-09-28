@@ -53,3 +53,8 @@
 /.idea/compiler.xml
 /.idea/.gitignore
 /.idea/encodings.xml
+/target/classes/com/mamalimomen/domains/Address.class
+/target/classes/com/mamalimomen/base/controller/utilities/InValidDataException.class
+/target/classes/com/mamalimomen/base/controller/utilities/PersistenceUnit.class
+/target/classes/com/mamalimomen/base/controller/utilities/PersistenceUnitManager.class
+/target/classes/com/mamalimomen/domains/UserInfo.class
