@@ -11,6 +11,7 @@ import java.util.Date;
 @NamedQueries({
         @NamedQuery(name = "User.findAll", query = "select u from User u"),
         @NamedQuery(name = "User.findOneByUserName", query = "select u from User u where u.userName =?1"),
+        @NamedQuery(name = "User.findOneByUserID", query = "select u from User u where u.id =?1"),
         @NamedQuery(name = "User.findAllWhereNotMe", query = "select u from User u where u.userName <>?1")
 })
 public class User extends BaseEntity<Long> implements Comparable<User> {
@@ -137,11 +138,6 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    public void printCompleteInformation() {
-        System.out.printf("%n%s.%nNationalCode: %s%nBirthday: %s%nRole: %s%n",
-                getUserName(), getNationalCode(), getBirthDay(), getRole());
     }
 
     @Override

@@ -46,7 +46,7 @@ public final class MenuActions {
     }
 
     static void seePublishedArticles(Scanner sc) {
-        List<Article> articles = articleService.findAllByNamedQuery("Article.findAllWherePublished", Article.class);
+        List<Article> articles = articleService.findPublishedArticles();
         if (articles.size() == 0) {
             System.out.println("There is not any published article yet!");
             return;
@@ -86,7 +86,7 @@ public final class MenuActions {
             if (userName.equalsIgnoreCase("esc")) {
                 return;
             }
-            Optional<User> oUser = userService.findOneByNamedQuery("User.findOneByUserName",userName,User.class);
+            Optional<User> oUser = userService.findOneUser(userName);
             if (oUser.isPresent()) {
                 User user = oUser.get();
                 System.out.print("Password: ");
@@ -114,12 +114,17 @@ public final class MenuActions {
                     return;
                 }
                 user.setUserName(userName);
-                System.out.print("National Code: ");
+                System.out.print("FirstName: ");
+                user.setFirstName(sc.next());
+                System.out.print("LastName: ");
+                user.setLastName(sc.next());
+                System.out.print("NationalCode: ");
                 user.setNationalCode(sc.next());
                 user.setPassword(user.getNationalCode());
                 System.out.print("Birthday (YYYY-MM-DD): ");
-                user.setBirthDay(sc.next());
+                user.setStringBirthDay(sc.next());
                 user.setRole(SingletonWriterRole.getWriterRole(roleService));
+                user.setAddress(setUserAddress(sc));
                 Optional<User> oUser = userService.save(user);
                 if (oUser.isPresent()) {
                     System.out.println("You were SignUp correctly, please login!");
@@ -127,6 +132,29 @@ public final class MenuActions {
                 } else {
                     System.out.println("There is a User with this information already!");
                 }
+            } catch (InValidDataException e) {
+                System.out.println("Wrong entered data format for " + e.getMessage() + "!");
+            }
+        }
+    }
+
+    private static Address setUserAddress(Scanner sc) {
+        while (true) {
+            try {
+                Address address = new Address();
+                System.out.print("Your Country: ");
+                String country = sc.next();
+                if (country.equalsIgnoreCase("pass")) {
+                    return address;
+                }
+                address.setCountry(country);
+                System.out.print("Your City: ");
+                address.setCity(sc.next());
+                System.out.print("Your Avenue: ");
+                address.setAvenue(sc.next());
+                System.out.print("Your PostalCode (10 digit): ");
+                address.setPostalCode(sc.next());
+                return address;
             } catch (InValidDataException e) {
                 System.out.println("Wrong entered data format for " + e.getMessage() + "!");
             }
@@ -165,7 +193,7 @@ public final class MenuActions {
     }
 
     public static void seeAndModifyArticles(User user, Scanner sc) {
-        List<Article> articles = new ArrayList<>(user.getArticles());
+        List<Article> articles = articleService.findAllUserArticles(user.getId());
         if (articles.size() == 0) {
             System.out.println("You have not any article yet!");
             return;
@@ -191,7 +219,7 @@ public final class MenuActions {
             try {
                 return sc.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Wrong format, Enter a number please!");
+                System.out.println("Wrong format, enter an integer number please!");
                 sc.nextLine();
             }
         }
@@ -206,7 +234,7 @@ public final class MenuActions {
                 String newTitle = sc.next() + sc.nextLine();
                 if (newTitle.equalsIgnoreCase("esc")) {
                     return;
-                } else if (!newTitle.equalsIgnoreCase("Pass")) {
+                } else if (!newTitle.equalsIgnoreCase("pass")) {
                     article.setTitle(newTitle);
                     article.setLastUpdateDate(new Date(System.currentTimeMillis()));
                     Optional<Article> oArticle = articleService.update(article);
@@ -214,7 +242,7 @@ public final class MenuActions {
                         System.out.println("Your article title was updated successfully!");
                         break;
                     } else {
-                        System.out.println("There is a problem, We can not update your article title!");
+                        System.out.println("There is a problem, we can not update your article title!");
                         continue;
                     }
                 }
@@ -231,7 +259,7 @@ public final class MenuActions {
                         System.out.println("Your article brief was updated successfully!");
                         break;
                     } else {
-                        System.out.println("There is a problem, We can not update your article brief!");
+                        System.out.println("There is a problem, we can not update your article brief!");
                         continue;
                     }
                 }
@@ -248,7 +276,7 @@ public final class MenuActions {
                         System.out.println("Your article content was updated successfully!");
                         break;
                     } else {
-                        System.out.println("There is a problem, We can not update your article content!");
+                        System.out.println("There is a problem, we can not update your article content!");
                     }
                 }
                 return;
@@ -259,76 +287,74 @@ public final class MenuActions {
     }
 
     public static void writeNewArticle(User user, Scanner sc) {
-        List<Category> categories = categoryService.findAll(Category.class, "Category.findAll");
-        List<Tag> tags = tagService.findAll(Tag.class, "Tag.findAll");
+        List<Category> categories = categoryService.findAllCategories();
+        List<Tag> tags = tagService.findAllTags();
         if (tags.size() == 0 || categories.size() == 0) {
             System.out.println("There is not any category or tag yet.\nso you can't create any article!");
             return;
         }
         Article article = new Article();
-        System.out.printf("%n====== %s ======", "CREATE NEW ARTICLE");
-        while (true) {
-            try {
-                while (true) {
-                    int cNumber = printAllCategories(categories, sc);
-                    article.getCategories().add(categories.get(cNumber - 1));
-                    System.out.print("Do you want add another category? ");
-                    String cAnswer = sc.next();
-                    if (cAnswer.equalsIgnoreCase("esc")) {
-                        return;
-                    } else if (!cAnswer.equalsIgnoreCase("y")) {
-                        break;
-                    }
+        System.out.printf("%n====== %s ======%n", "CREATE NEW ARTICLE");
+        try {
+            while (true) {
+                int cNumber = printAllCategories(categories, sc);
+                article.getCategories().add(categories.get(cNumber - 1));
+                System.out.print("Do you want add another category? ");
+                String cAnswer = sc.next();
+                if (cAnswer.equalsIgnoreCase("esc")) {
+                    return;
+                } else if (!cAnswer.equalsIgnoreCase("y")) {
+                    break;
                 }
-                while (true) {
-                    int tNumber = printAllTags(tags, sc);
-                    article.getTags().add(tags.get(tNumber - 1));
-                    System.out.print("Do you want add another tag? ");
-                    String tAnswer = sc.next();
-                    if (tAnswer.equalsIgnoreCase("esc")) {
-                        return;
-                    } else if (!tAnswer.equalsIgnoreCase("y")) {
-                        break;
-                    }
-                }
-                while (true) {
-                    try {
-                        System.out.print("Title: ");
-                        String title = sc.next() + sc.nextLine();
-                        if (title.equalsIgnoreCase("esc")) {
-                            return;
-                        }
-                        article.setTitle(title);
-                        System.out.print("Brief: ");
-                        String brief = SingletonScanner.readParagraph();
-                        if (brief.endsWith("esc")) {
-                            return;
-                        }
-                        article.setBrief(brief);
-                        System.out.print("Content: ");
-                        String content = SingletonScanner.readParagraph();
-                        if (content.endsWith("esc")) {
-                            return;
-                        }
-                        article.setContent(content);
-                        article.setCreateDate(new Date(System.currentTimeMillis()));
-                        article.setPublished(false);
-                        article.addWriter(user);
-                        addOtherWriters(article, sc);
-                        Optional<Article> oArticle = articleService.save(article);
-                        if (oArticle.isPresent()) {
-                            System.out.println("Your article was created correctly!");
-                            return;
-                        } else {
-                            System.out.println("There is a article with this title already!");
-                        }
-                    } catch (InValidDataException e) {
-                        System.out.println("Wrong entered data format for " + e.getMessage() + "!");
-                    }
-                }
-            } catch (IndexOutOfBoundsException e) {
-                return;
             }
+            while (true) {
+                int tNumber = printAllTags(tags, sc);
+                article.getTags().add(tags.get(tNumber - 1));
+                System.out.print("Do you want add another tag? ");
+                String tAnswer = sc.next();
+                if (tAnswer.equalsIgnoreCase("esc")) {
+                    return;
+                } else if (!tAnswer.equalsIgnoreCase("y")) {
+                    break;
+                }
+            }
+            while (true) {
+                try {
+                    System.out.print("Title: ");
+                    String title = sc.next() + sc.nextLine();
+                    if (title.equalsIgnoreCase("esc")) {
+                        return;
+                    }
+                    article.setTitle(title);
+                    System.out.print("Brief: ");
+                    String brief = SingletonScanner.readParagraph();
+                    if (brief.endsWith("esc")) {
+                        return;
+                    }
+                    article.setBrief(brief);
+                    System.out.print("Content: ");
+                    String content = SingletonScanner.readParagraph();
+                    if (content.endsWith("esc")) {
+                        return;
+                    }
+                    article.setContent(content);
+                    article.setCreateDate(new Date(System.currentTimeMillis()));
+                    article.setPublished(false);
+                    article.addWriter(user);
+                    addOtherWriters(article, sc);
+                    Optional<Article> oArticle = articleService.save(article);
+                    if (oArticle.isPresent()) {
+                        System.out.println("Your article was created correctly!");
+                        return;
+                    } else {
+                        System.out.println("There is a article with this title already!");
+                    }
+                } catch (InValidDataException e) {
+                    System.out.println("Wrong entered data format for " + e.getMessage() + "!");
+                }
+            }
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Rolling back to previous step!\n");
         }
     }
 
@@ -341,7 +367,7 @@ public final class MenuActions {
             try {
                 return sc.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Wrong format, Enter a number please!");
+                System.out.println("Wrong format, enter an integer number please!");
                 sc.nextLine();
             }
         }
@@ -356,7 +382,7 @@ public final class MenuActions {
             try {
                 return sc.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Wrong format, Enter a number please!");
+                System.out.println("Wrong format, enter an integer number please!");
                 sc.nextLine();
             }
         }
@@ -369,7 +395,7 @@ public final class MenuActions {
             if (writer.equalsIgnoreCase("esc")) {
                 return;
             }
-            Optional<User> oUser = userService.findUserByUserName(writer);
+            Optional<User> oUser = userService.findOneUser(writer);
             if (oUser.isPresent()) {
                 article.addWriter(oUser.get());
                 System.out.print("Do you want add another writer? ");
@@ -390,7 +416,7 @@ public final class MenuActions {
     }
 
     public static void seeAllWrittenArticles(User user, Scanner sc) {
-        List<Article> articles = articleService.findAll(Article.class, "Article.findAll");
+        List<Article> articles = articleService.findAllArticles();
         if (articles.size() == 0) {
             System.out.println("There is not any article yet!");
             return;
@@ -410,7 +436,7 @@ public final class MenuActions {
     }
 
     public static void changeArticlesPublishState(Article article, Scanner sc) {
-        System.out.print("Toggle publication state (Current state: " + article.isPublished() + ")? ");
+        System.out.print("Toggle publication state (current state: " + article.isPublished() + ")? ");
         String answer = sc.next();
         if (answer.equalsIgnoreCase("y")) {
             article.setPublished(!article.isPublished());
@@ -419,7 +445,7 @@ public final class MenuActions {
             if (oArticle.isPresent()) {
                 System.out.println("Your article publication state was toggled successfully!");
             } else {
-                System.out.println("There is a problem, We can not toggle your article publication state!");
+                System.out.println("There is a problem, we can not toggle your article publication state!");
             }
         }
     }
@@ -432,12 +458,12 @@ public final class MenuActions {
             if (articleTitle.equalsIgnoreCase("esc")) {
                 return;
             }
-            Optional<Article> oArticle = articleService.findByTitle(articleTitle);
+            Optional<Article> oArticle = articleService.findOneArticle(articleTitle);
             if (oArticle.isPresent()) {
                 System.out.print("Do you want delete it? ");
                 String answer = sc.next();
                 if (answer.equalsIgnoreCase("y")) {
-                    articleService.delete(oArticle.get().getId());
+                    articleService.delete(oArticle.get());
                     System.out.println(articleTitle + " Article was delete successfully!");
                 }
             } else {
@@ -497,17 +523,17 @@ public final class MenuActions {
     }
 
     public static void changeRoleOfUsers(User user, Scanner sc) {
-        List<User> users = userService.findAllExceptMe(user.getUserName());
-        if (users.size() == 0) {
+        List<UserInfo> userInfos = userService.findAllExceptMeInfo(user.getUserName());
+        if (userInfos.size() == 0) {
             System.out.println("There is not any other user yet!");
             return;
         }
         while (true) {
-            int choice = printUsers(users, sc);
+            int choice = printUsers(userInfos, sc);
             try {
-                User chooseUser = users.get(choice - 1);
-                chooseUser.printCompleteInformation();
-                changeUserRole(chooseUser, sc);
+                UserInfo chooseUserInfo = userInfos.get(choice - 1);
+                chooseUserInfo.printCompleteInformation();
+                changeUserRole(chooseUserInfo, sc);
             } catch (IndexOutOfBoundsException e) {
                 return;
             }
@@ -515,39 +541,40 @@ public final class MenuActions {
     }
 
 
-    static int printUsers(List<User> users, Scanner sc) {
+    private static int printUsers(List<UserInfo> userInfos, Scanner sc) {
         while (true) {
-            for (int i = 1; i <= users.size(); i++) {
-                System.out.printf("%n%d. %s%n", i, users.get(i - 1));
+            for (int i = 1; i <= userInfos.size(); i++) {
+                System.out.printf("%n%d. %s%n", i, userInfos.get(i - 1));
             }
             System.out.print("Enter your choice (or other number for \"exit\"): ");
             try {
                 return sc.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Wrong format, Enter a number please!");
+                System.out.println("Wrong format, enter an integer number please!");
                 sc.nextLine();
             }
         }
     }
 
-    public static void changeUserRole(User user, Scanner sc) {
-        System.out.print("Enter user role title (Current role: " + user.getRole() + "): ");
+    private static void changeUserRole(UserInfo userInfo, Scanner sc) {
+        System.out.print("Enter user role title (current role: " + userInfo.getRole() + "): ");
         String newRole = sc.next();
         if (newRole.equalsIgnoreCase("esc")) {
             return;
         }
-        if (newRole.equalsIgnoreCase(user.getRole().getTitle())) {
+        if (newRole.equalsIgnoreCase(userInfo.getRole().getTitle())) {
             System.out.println("Duplicate role!\nnothing being changed!");
             return;
         }
-        Optional<Role> role = roleService.findByTitle(newRole);
-        if (role.isPresent()) {
-            user.setRole(role.get());
-            Optional<User> updatedUser = userService.update(user);
+        Optional<Role> oRole = roleService.findOneRole(newRole);
+        if (oRole.isPresent()) {
+            Optional<User> oUser = userService.findOneUser(userInfo.getId());
+            oUser.get().setRole(oRole.get());
+            Optional<User> updatedUser = userService.update(oUser.get());
             if (updatedUser.isPresent()) {
                 System.out.println("Your user's role was changed successfully!");
             } else {
-                System.out.println("There is a problem, We can not change user's role!");
+                System.out.println("There is a problem, we can not change user's role!");
             }
         } else {
             System.out.println("There is not any role with this title yet!");

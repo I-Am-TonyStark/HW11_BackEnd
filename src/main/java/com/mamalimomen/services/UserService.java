@@ -11,6 +11,8 @@ public interface UserService extends BaseService<User, Long> {
 
     Optional<User> findOneUser(String userName);
 
+    Optional<User> findOneUser(Long userID);
+
     Optional<UserInfo> findOneUserInfo(String userName);
 
     List<User> findAllExceptMe(String myUserName);

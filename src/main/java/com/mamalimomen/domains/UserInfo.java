@@ -59,4 +59,14 @@ public class UserInfo {
     public void setCity(String city) {
         this.city = city;
     }
+
+    public void printCompleteInformation() {
+        System.out.printf("%nFirstName: %s%nLastName: %s%nCity: %s%nRole: %s%n",
+                getFirstName(), getLastName(), getCity(), getRole());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s: %s", getFirstName(), getRole());
+    }
 }

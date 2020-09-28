@@ -1,11 +1,11 @@
 package com.mamalimomen.controller.menus;
 
-import com.mamalimomen.domains.UserInfo;
+import com.mamalimomen.domains.User;
 
 public class WriterMenu extends AbstractMenu {
 
-    public WriterMenu(UserInfo writer) {
-        super(writer.getFullName() + "'s account", new String[]{
+    public WriterMenu(User writer) {
+        super(writer.getUserName() + "'s account", new String[]{
                 "Change your password",
                 "See and Modify your articles",
                 "Write new article"
@@ -17,13 +17,13 @@ public class WriterMenu extends AbstractMenu {
         while (true) {
             switch (menuAction()) {
                 case 1:
-                    MenuActions.changePassword(thisMenuUser,sc);
+                    MenuActions.changePassword(thisMenuUser, sc);
                     break;
                 case 2:
-                    MenuActions.seeAndModifyArticles(thisMenuUser,sc);
+                    MenuActions.seeAndModifyArticles(thisMenuUser, sc);
                     break;
                 case 3:
-                    MenuActions.writeNewArticle(thisMenuUser,sc);
+                    MenuActions.writeNewArticle(thisMenuUser, sc);
                     break;
                 default:
                     return;

@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 @NamedQueries({
         @NamedQuery(name = "Article.findAll", query = "select a from Article a"),
         @NamedQuery(name = "Article.findAllWherePublished", query = "select a from Article a where a.isPublished = true"),
-        @NamedQuery(name = "Article.findOneByTitle", query = "select a from Article a where a.title =?1")
+        @NamedQuery(name = "Article.findOneByTitle", query = "select a from Article a where a.title =?1"),
+        @NamedQuery(name = "Article.findAllByWriter", query = "select a from Article a join a.writers w where w.id =?1")
 })
 public class Article extends BaseEntity<Long> implements Comparable<Article> {
 

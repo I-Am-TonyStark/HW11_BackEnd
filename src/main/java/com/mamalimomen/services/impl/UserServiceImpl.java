@@ -29,6 +29,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long, UserRepository>
     }
 
     @Override
+    public Optional<User> findOneUser(Long userID) {
+        return baseRepository.findOneByNamedQuery("User.findOneByUserID", userID, User.class);
+    }
+
+    @Override
     public Optional<UserInfo> findOneUserInfo(String userName) {
         return baseRepository.findOneByNamedQuery(mapUserToUserInfo, "User.findOneByUserName", userName, User.class);
     }
