@@ -8,7 +8,8 @@ public class WriterMenu extends AbstractMenu {
         super(writer.getUserName() + "'s account", new String[]{
                 "Change your password",
                 "See and Modify your articles",
-                "Write new article"
+                "Write new article",
+                "See your CreditCard"
         }, writer);
     }
 
@@ -24,6 +25,9 @@ public class WriterMenu extends AbstractMenu {
                     break;
                 case 3:
                     MenuActions.writeNewArticle(thisMenuUser, sc);
+                    break;
+                case 4:
+                    MenuActions.seeCreditCard(thisMenuUser,sc);
                     break;
                 default:
                     return;

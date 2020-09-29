@@ -6,7 +6,6 @@
     <persistence-unit name="persistence-unit-one">
         <description>Hibernate EntityManager One</description>
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <!--<exclude-unlisted-classes>false</exclude-unlisted-classes>-->
         <class>com.mamalimomen.domains.Article</class>
         <class>com.mamalimomen.domains.Tag</class>
         <class>com.mamalimomen.domains.Category</class>
@@ -23,9 +22,7 @@
             <property name="javax.persistence.jdbc.user" value="mamali"/>
             <property name="javax.persistence.jdbc.password" value="mamali2120"/>
             <property name="javax.persistence.schema-generation.database.action" value="create-drop"/>
-            <!--<property name="hibernate.hbm2ddl.auto" value="update"/>-->
             <property name="javax.persistence.sql-load-script-source" value="data.sql"/>
-            <!--<property name="hibernate.show_sql" value="true"/>-->
         </properties>
     </persistence-unit>
 
@@ -33,6 +30,7 @@
         <description>Hibernate EntityManager Two</description>
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <!--<exclude-unlisted-classes>false</exclude-unlisted-classes>-->
+        <class>com.mamalimomen.domains.CreditCard</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
         <properties>
