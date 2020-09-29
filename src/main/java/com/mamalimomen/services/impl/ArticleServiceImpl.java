@@ -7,8 +7,13 @@ import com.mamalimomen.services.ArticleService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class ArticleServiceImpl extends BaseServiceImpl<Article, Long, ArticleRepository> implements ArticleService {
+
+    public static final Predicate<Article> isPublished = article
+            -> article.isPublished();
+
     public ArticleServiceImpl(ArticleRepository articleRepository) {
         super(articleRepository);
     }
@@ -23,9 +28,14 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, Long, ArticleRe
         return baseRepository.findAllByNamedQuery("Article.findAll", Article.class);
     }
 
-    @Override
+    /*@Override
     public List<Article> findPublishedArticles() {
         return baseRepository.findAllByNamedQuery("Article.findAllWherePublished", Article.class);
+    }*/
+
+    @Override
+    public List<Article> findPublishedArticles() {
+        return baseRepository.findAllByNamedQuery(isPublished, "Article.findAll", Article.class);
     }
 
     @Override

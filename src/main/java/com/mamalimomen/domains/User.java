@@ -118,7 +118,7 @@ public class User extends BaseEntity<Long> implements Comparable<User> {
             throw new InValidDataException("Birthday");
         }
         String[] tempArray = birthDay.split("-");
-        setBirthDay(new Date(Integer.parseInt(tempArray[0]), Integer.parseInt(tempArray[1]), Integer.parseInt(tempArray[2])));
+        setBirthDay(new Date(Integer.parseInt(tempArray[0]) - 1900, Integer.parseInt(tempArray[1]), Integer.parseInt(tempArray[2])));
     }
 
     public String getPassword() {

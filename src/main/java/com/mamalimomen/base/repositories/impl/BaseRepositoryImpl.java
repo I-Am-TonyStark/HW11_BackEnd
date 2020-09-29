@@ -46,7 +46,8 @@ public class BaseRepositoryImpl<E extends BaseEntity<PK>, PK extends Number> imp
         try {
             em.getTransaction().begin();
 
-            e = em.merge(e);
+            if (!em.contains(e))
+                e = em.merge(e);
 
             em.getTransaction().commit();
 

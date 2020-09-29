@@ -19,6 +19,7 @@ public final class SingletonWriterRole {
             Role role = new Role();
             try {
                 role.setTitle("writer");
+                roleService.save(role);
             } catch (InValidDataException e) {
                 e.printStackTrace();
             }

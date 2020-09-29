@@ -55,7 +55,7 @@ public final class MenuActions {
             int choice = printArticles(articles, sc);
             try {
                 articles.get(choice - 1).printCompleteInformation();
-                System.out.print("Press any key to back!");
+                System.out.print("Press any key to back! ");
                 sc.next();
             } catch (IndexOutOfBoundsException e) {
                 return;
@@ -113,6 +113,10 @@ public final class MenuActions {
                 if (userName.equalsIgnoreCase("esc")) {
                     return;
                 }
+                if (userService.findOneUser(userName).isPresent()) {
+                    System.out.println("This UserName has taken already!");
+                    continue;
+                }
                 user.setUserName(userName);
                 System.out.print("FirstName: ");
                 user.setFirstName(sc.next());
@@ -143,11 +147,7 @@ public final class MenuActions {
             try {
                 Address address = new Address();
                 System.out.print("Your Country: ");
-                String country = sc.next();
-                if (country.equalsIgnoreCase("pass")) {
-                    return address;
-                }
-                address.setCountry(country);
+                address.setCountry(sc.next());
                 System.out.print("Your City: ");
                 address.setCity(sc.next());
                 System.out.print("Your Avenue: ");
@@ -202,7 +202,7 @@ public final class MenuActions {
             int number = printUserArticles(articles, sc);
             try {
                 modifyUserArticle(articles.get(number - 1), sc);
-                System.out.print("Press any key to back!");
+                System.out.print("Press any key to back! ");
                 sc.next();
             } catch (IndexOutOfBoundsException e) {
                 return;
@@ -523,12 +523,12 @@ public final class MenuActions {
     }
 
     public static void changeRoleOfUsers(User user, Scanner sc) {
-        List<UserInfo> userInfos = userService.findAllExceptMeInfo(user.getUserName());
-        if (userInfos.size() == 0) {
-            System.out.println("There is not any other user yet!");
-            return;
-        }
         while (true) {
+            List<UserInfo> userInfos = userService.findAllExceptMeInfo(user.getUserName());
+            if (userInfos.size() == 0) {
+                System.out.println("There is not any other user yet!");
+                return;
+            }
             int choice = printUsers(userInfos, sc);
             try {
                 UserInfo chooseUserInfo = userInfos.get(choice - 1);
