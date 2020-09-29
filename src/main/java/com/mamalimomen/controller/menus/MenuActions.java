@@ -132,7 +132,7 @@ public final class MenuActions {
                 user.setStringBirthDay(sc.next());
 
                 CreditCard creditCard = new CreditCard();
-                System.out.print("Account Number (CreditCard): ");
+                System.out.print("AccountNumber (CreditCard): ");
                 creditCard.setAccountNumber(sc.next());
                 creditCard.setOwnerID(user.getId());
 
@@ -594,7 +594,7 @@ public final class MenuActions {
     static void seeCreditCard(User user, Scanner sc) {
         Optional<CreditCard> oCreditCard = creditCardService.findOneCreditCard(user.getId());
         if (oCreditCard.isPresent()) {
-            System.out.println(oCreditCard.get());
+            System.out.printf("%nYour CreditCart's account number is \'%s\'%n", oCreditCard.get());
         }
         System.out.print("Press any key to back! ");
         sc.next();
