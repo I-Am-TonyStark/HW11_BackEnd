@@ -9,6 +9,7 @@ public class AdminMenu extends AbstractMenu {
                 "Change your password",
                 "See and Modify your articles",
                 "Write new article",
+                "See your CreditCard",
                 "Change role of users",
                 "Publish or unPublish an article",
                 "Delete an article",
@@ -31,19 +32,22 @@ public class AdminMenu extends AbstractMenu {
                     MenuActions.writeNewArticle(thisMenuUser, sc);
                     break;
                 case 4:
-                    MenuActions.changeRoleOfUsers(thisMenuUser,sc);
+                    MenuActions.seeCreditCard(thisMenuUser, sc);
                     break;
                 case 5:
-                    MenuActions.seeAllWrittenArticles(thisMenuUser, sc);
+                    MenuActions.changeRoleOfUsers(thisMenuUser, sc);
                     break;
                 case 6:
-                    MenuActions.deleteArticles(thisMenuUser,sc);
+                    MenuActions.seeAllWrittenArticles(thisMenuUser, sc);
                     break;
                 case 7:
-                    MenuActions.createNewCategory(thisMenuUser,sc);
+                    MenuActions.deleteArticles(thisMenuUser, sc);
                     break;
                 case 8:
-                    MenuActions.createNewTag(thisMenuUser,sc);
+                    MenuActions.createNewCategory(thisMenuUser, sc);
+                    break;
+                case 9:
+                    MenuActions.createNewTag(thisMenuUser, sc);
                     break;
                 default:
                     return;

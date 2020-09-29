@@ -23,6 +23,7 @@ public final class MenuActions {
     private static RoleService roleService;
     private static TagService tagService;
     private static UserService userService;
+    private static CreditCardService creditCardService;
 
     private MenuActions() {
         articleService = new ArticleServiceImpl(new ArticleRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_ONE)));
@@ -30,6 +31,7 @@ public final class MenuActions {
         tagService = new TagServiceImpl(new TagRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_ONE)));
         userService = new UserServiceImpl(new UserRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_ONE)));
         roleService = new RoleServiceImpl(new RoleRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_ONE)));
+        creditCardService = new CreditCardServiceImpl(new CreditCardRepositoryImpl(PersistenceUnitManager.getEntityManager(PersistenceUnit.UNIT_TWO)));
     }
 
     public static synchronized void startApp() {
@@ -42,6 +44,7 @@ public final class MenuActions {
         tagService.closeEntityManger();
         userService.closeEntityManger();
         roleService.closeEntityManger();
+        creditCardService.closeEntityManger();
         PersistenceUnitManager.closePersistenceUnits();
     }
 
@@ -127,10 +130,17 @@ public final class MenuActions {
                 user.setPassword(user.getNationalCode());
                 System.out.print("Birthday (YYYY-MM-DD): ");
                 user.setStringBirthDay(sc.next());
+
+                CreditCard creditCard = new CreditCard();
+                System.out.print("Account Number (CreditCard): ");
+                creditCard.setAccountNumber(sc.next());
+                creditCard.setOwnerID(user.getId());
+
                 user.setRole(SingletonWriterRole.getWriterRole(roleService));
                 user.setAddress(setUserAddress(sc));
                 Optional<User> oUser = userService.save(user);
-                if (oUser.isPresent()) {
+                Optional<CreditCard> oCreditCard = creditCardService.save(creditCard);
+                if (oUser.isPresent() && oCreditCard.isPresent()) {
                     System.out.println("You were SignUp correctly, please login!");
                     break;
                 } else {
@@ -427,7 +437,7 @@ public final class MenuActions {
                 Article chooseArticle = articles.get(choice - 1);
                 chooseArticle.printCompleteInformation();
                 changeArticlesPublishState(chooseArticle, sc);
-                System.out.print("Press any key to back!");
+                System.out.print("Press any key to back! ");
                 sc.next();
             } catch (IndexOutOfBoundsException e) {
                 return;
@@ -579,6 +589,15 @@ public final class MenuActions {
         } else {
             System.out.println("There is not any role with this title yet!");
         }
+    }
+
+    static void seeCreditCard(User user, Scanner sc) {
+        Optional<CreditCard> oCreditCard = creditCardService.findOneCreditCard(user.getId());
+        if (oCreditCard.isPresent()) {
+            System.out.println(oCreditCard.get());
+        }
+        System.out.print("Press any key to back! ");
+        sc.next();
     }
 }
 

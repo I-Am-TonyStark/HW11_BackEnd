@@ -5,7 +5,6 @@ public enum PersistenceUnit {
     UNIT_TWO("persistence-unit-two");
 
     private final String unit;
-    public static final int UNIT_COUNT = 2;
 
     PersistenceUnit(String unit) {
         this.unit = unit;
